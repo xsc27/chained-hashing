@@ -1,0 +1,92 @@
+---
+name: CI
+
+on: [push]
+
+jobs:
+
+  lint:
+    name: Preflight
+    strategy:
+      matrix:
+        env: [ lint, docs, pkg ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
+      - run: pip install --user tox
+      - run: tox -e "${{ matrix.env }}"
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.env == 'pkg' }}
+        with:
+          name: python-dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
+
+  unit:
+    name: Unit Tests
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11-dev']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
+      - run: pip install --user tox
+      - run: tox -e py3
+      - name: Publish Coverage Metrics
+        uses: 5monkeys/cobertura-action@master
+        if: ${{ matrix.python-version == '3.10' }}
+        with:
+          path: .tox/py3/coverage.xml
+          minimum_coverage: 100
+          show_branch: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: '.tox/py3/junit.xml'
+          retention-days: 1
+
+  publish-results:
+    name: Publish Results
+    needs: unit
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          path: reports
+      - run: find . -name \*.xml
+      - uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: reports/**/junit.xml
+
+  contianer:
+    name: Container
+    needs: [lint, unit]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch Wheel
+        uses: actions/download-artifact@v2
+        with:
+          name: python-dist
+      - name: Build Container
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+      - name: Run Container
+        run: docker container run ${{ steps.docker_build.outputs.digest }} -v

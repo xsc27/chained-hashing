@@ -1,0 +1,135 @@
+---
+name: Release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [trunk]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency: release
+
+jobs:
+
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v2
+      - id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          git-user-name: github-actions[bot]
+          git-user-email: 41898282+github-actions[bot]@users.noreply.github.com
+          skip-version-file: true
+      - name: Push tags
+        run: |
+          version='${{ steps.changelog.outputs.tag }}'
+          for tag in ${version%.*.*} ${version%.*} latest; do
+            git tag --force ${tag}
+            git push --force origin ${tag}
+          done
+    outputs:
+      clean: ${{ steps.changelog.outputs.clean_changelog }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      tag: ${{ steps.changelog.outputs.tag }}
+
+  pkg:
+    name: Python Wheel
+    needs: [changelog]
+    runs-on: ubuntu-latest
+    if: ${{ needs.changelog.outputs.skipped == 'false' }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.changelog.outputs.tag }}
+      - uses: actions/setup-python@v2
+        with:
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
+      - run: pip install tox
+      - run: tox -e "${GITHUB_JOB}"
+      - name: Hash artifacts
+        run: |
+          cd dist
+          for f in *; do sha256sum "${f}" > "${f}.sha256"; done
+      - uses: actions/upload-artifact@v2
+        with:
+          name: python-dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
+
+  container:
+    name: Docker Image
+    needs: [changelog, pkg]
+    if: ${{ needs.changelog.outputs.skipped == 'false' }}
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.changelog.outputs.tag }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: python-dist
+      - name: Login
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate Metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ github.repository }}
+          flavor: prefix=v
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.changelog.outputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.changelog.outputs.tag }}
+            type=semver,pattern={{major}},value=${{ needs.changelog.outputs.tag }}
+      - name: Build and Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .  # Required to avoid checkout
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  gh-release:
+    name: Create GitHub Release
+    needs: [changelog, pkg]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: python-dist
+      - uses: ncipollo/release-action@v1
+        with:
+          artifactErrorsFailBuild: true
+          artifacts: '*'
+          body: |
+            ${{ needs.changelog.outputs.clean }}
+          tag: ${{ needs.changelog.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  docs:
+    name: Deploy Docs
+    needs: [ changelog ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.changelog.outputs.tag }}
+      - uses: actions/setup-python@v2
+      - run: python3 -m pip install --user tox
+      - run: tox -e "${GITHUB_JOB}" -- gh-deploy --force

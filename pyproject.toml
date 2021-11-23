@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.0"]
+build-backend = 'setuptools.build_meta'
+
+[tool.bandit]
+exclude = ['/tests']
+
+[tool.black]
+line-length = 98
+target-version = ['py310']
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+
+[tool.flakehell]
+extended_default_ignore=[]
+
+[tool.flakehell.plugins]
+dlint = ['+*']
+flake8-bandit = ['+*']
+flake8-bugbear = ['+*']
+flake8-comprehensions = ['+*']
+flake8-darglint = ['+*',]
+flake8-debugger = ['+*']
+flake8-docstrings = ['+*']
+flake8-eradicate = ['+*']
+flake8-isort = ['+*']
+flake8-pytest-style = ['+*']
+flake8-rst-docstrings = ['+*']
+mccabe = ['+*']
+pep8-naming = ['+*']
+pyflakes = ['+*']
+
+[tool.isort]
+profile = 'black'
+line_length = 98
+known_first_party = 'chained_hashing'
+
+[tool.pydocstyle]
+convention = 'google'
+
+[tool.pylint.config]
+max-line-length = 98
+persistent = 'no'
+enable = [
+    'F',  # Fatal
+    'E',  # Error
+    'W',  # Warning
+    'C',  # Convention
+    'I',  # Informational
+]
+disable = [
+    # 'R',  # Refactor
+    'too-many-instance-attributes',
+    'fixme',
+    'locally-disabled',
+    'no-absolute-import',
+    'suppressed-message',
+    'duplicate-code',  # https://github.com/PyCQA/pylint/issues/214
+    ]
+
+[tool.pytest.ini_options]
+addopts = '--verbosity=2 --doctest-modules --ignore=docs --showlocals -rfp --strict-markers --cov-report=term --cov chained_hashing'
+log_cli = true
+log_level = 'DEBUG'
+log_cli_level = 'INFO'
+log_file_level = 'DEBUG'
+
+[tool.setuptools_scm]

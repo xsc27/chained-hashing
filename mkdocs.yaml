@@ -1,0 +1,37 @@
+site_name: Chained Hashing
+site_description: "Chained Hashing POC"
+site_url: ''
+repo_url: "https://github.com/xsc27/chained-hashing"
+remote_branch: "gh-pages"
+theme:
+  name: "material"
+  palette:
+    scheme: slate
+use_directory_urls: false
+markdown_extensions:
+- pymdownx.highlight
+- pymdownx.inlinehilite
+- pymdownx.magiclink
+- pymdownx.snippets:
+    check_paths: true
+- pymdownx.superfences
+- toc:
+    permalink: true
+
+plugins:
+- exclude:
+    glob:
+    - "_scripts/**"
+- search
+- section-index
+- gen-files:
+    scripts:
+    - docs/_scripts/gen_stubs.py
+- mkdocstrings:
+    handlers:
+      python:
+        rendering:
+          show_if_no_docstring: true
+          show_signature_annotations: true
+    watch:
+    - src
