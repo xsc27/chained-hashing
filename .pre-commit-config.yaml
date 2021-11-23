@@ -1,0 +1,50 @@
+default_stages: [commit, manual]
+exclude: "CHANGELOG.md"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v4.0.1"
+    hooks:
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+  - repo: https://github.com/asottile/setup-cfg-fmt
+    rev: "v1.20.0"
+    hooks:
+      - id: setup-cfg-fmt
+  - repo: https://github.com/pycqa/isort
+    rev: "5.10.1"
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: "21.11b1"
+    hooks:
+      - id: black
+  - repo: https://github.com/executablebooks/mdformat
+    rev: "0.7.10"
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+        exclude: ^docs\/(index|changelog)\.md$
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: "v6.0.0"
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ['@commitlint/config-conventional']
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.8.0
+    hooks:
+      - id: hadolint-docker
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.8
+    hooks:
+      - id: actionlint-docker
+        args: [
+          '-ignore', 'input "cache-dependency-path" is not defined in action "actions/setup-python@v2"',  # false positive
+          '-ignore', 'input "cache" is not defined in action "actions/setup-python@v2"',  # false positive
+        ]

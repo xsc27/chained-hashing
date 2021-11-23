@@ -1,0 +1,5 @@
+# Allowlist for Dockerfile
+*
+!requirements/lock.txt
+!dist/*.whl
+!*.whl
