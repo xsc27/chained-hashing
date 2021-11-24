@@ -33,8 +33,9 @@ options:
                         Set log level
 
 actions:
-  {run}
-    run                 Execute
+  {decode,encode}
+    decode              decode data
+    encode              encode data
 ```
 
 ### Container Image
@@ -54,8 +55,9 @@ options:
                         Set log level
 
 actions:
-  {run}
-    run                 Execute command
+  {decode,encode}
+    decode              decode data
+    encode              encode data
 ```
 
 # License

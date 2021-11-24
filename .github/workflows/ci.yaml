@@ -47,7 +47,7 @@ jobs:
         if: ${{ matrix.python-version == '3.10' }}
         with:
           path: .tox/py3/coverage.xml
-          minimum_coverage: 100
+          minimum_coverage: 99
           show_branch: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Unit Test Results
