@@ -18,5 +18,5 @@ SHELL ["/bin/ash", "-euxc"]
 RUN find /opt/app/bin/ -maxdepth 1 -type f -executable -exec ln -sv "{}" /usr/local/bin/ \;
 
 USER guest
-ENTRYPOINT ["chained_hashing"]
+ENTRYPOINT ["chcli"]
 CMD ["--help"]

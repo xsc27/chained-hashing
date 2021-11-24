@@ -1,4 +1,4 @@
 """Chained Hashing package."""
-from chained_hashing.main import run
+from chained_hashing.main import Decoder, Encoder, decode, encode
 
-__all__ = ["run"]
+__all__ = ["Decoder", "Encoder", "decode", "encode"]

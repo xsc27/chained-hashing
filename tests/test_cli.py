@@ -3,13 +3,14 @@
 
 import runpy
 import shlex
+from filecmp import cmp
 
 import pytest
 
-from chained_hashing import cli
+from chained_hashing import cli, encode
 
 
-def test_run():
+def test_no_arguments():
     """Test the `run` function with no arguments."""
     # Arrange
     args = []
@@ -18,31 +19,7 @@ def test_run():
         cli.run(args)
     # Assert
     assert pytest_err.type is SystemExit  # noqa: S101
-    assert pytest_err.value.code == 1  # noqa: S101
-
-
-def test_run_subcommand():
-    """Test the `run` function with `run` subcommand."""
-    # Arrange
-    args = shlex.split("run")
-    # Act
-    with pytest.raises(SystemExit) as pytest_err:
-        cli.run(args)
-    # Assert
-    assert pytest_err.type is SystemExit  # noqa: S101
-    assert pytest_err.value.code == 1  # noqa: S101
-
-
-def test_logging_debug(caplog):
-    """Test the `run` function with parameter to set loglevel."""
-    # Arrange
-    args = shlex.split("-l debug")
-    # Act
-    with pytest.raises(SystemExit) as _:
-        cli.run(args)
-    # Assert
-    assert caplog.records[0].message.startswith("CLI parameters")  # noqa: S101
-    assert "'log_level': 'debug'" in caplog.records[0].message  # noqa: S101
+    assert pytest_err.value.code >= 1  # noqa: S101
 
 
 @pytest.mark.filterwarnings(
@@ -57,6 +34,46 @@ def test_file(module):
             runpy.run_module(f"chained_hashing.{module}")["__file__"], run_name="__main__"
         )
     # Assert
+    assert pytest_err.value.code >= 1  # noqa: S101
+
+
+def test_roundtrip(tmp_path):
+    """Test round trip encode and decode."""
+    # Arrange
+    sample_file = "LICENSE"
+    tmp_dec = tmp_path.joinpath("decoded")
+    tmp_enc = tmp_path.joinpath("encoded")
+    # Act
+    cli.run(shlex.split(f"-l error encode -i {sample_file} -o {tmp_enc}"))
+    cli.run(shlex.split(f"-l debug decode -i {tmp_enc} -o {tmp_dec}"))
+    # Assert
+    assert cmp(sample_file, tmp_dec)  # noqa: S101
+
+
+def test_roundtrip_hash(tmp_path):
+    """Test round trip encode and decode with hash."""
+    # Arrange
+    sample_file = "LICENSE"
+    tmp_dec = tmp_path.joinpath("decoded")
+    tmp_enc = tmp_path.joinpath("encoded")
+    # Act
+    sha = encode(sample_file, tmp_enc)
+    cli.run(shlex.split(f"-l debug decode -i {tmp_enc} -o {tmp_dec} {sha}"))
+    # Assert
+    assert cmp(sample_file, tmp_dec)  # noqa: S101
+
+
+def test_invalid_hash(tmp_path):
+    """Test the `run` function with no arguments."""
+    # Arrange
+    sample_file = "LICENSE"
+    tmp_dec = tmp_path.joinpath("decoded")
+    args = shlex.split(f"decode -i {sample_file} -o {tmp_dec}")
+    # Act
+    with pytest.raises(SystemExit) as pytest_err:
+        cli.run(args)
+    # Assert
+    assert pytest_err.type is SystemExit  # noqa: S101
     assert pytest_err.value.code >= 1  # noqa: S101
 
 
