@@ -13,6 +13,8 @@ repos:
       - id: fix-byte-order-marker
       - id: mixed-line-ending
       - id: trailing-whitespace
+      # - id: no-commit-to-branch
+      #   args: ["-b", "trunk"]
   - repo: https://github.com/asottile/setup-cfg-fmt
     rev: "v1.20.0"
     hooks:
