@@ -1,14 +1,36 @@
 site_name: Chained Hashing
 site_description: "Chained Hashing POC"
-site_url: ''
+site_url: !ENV [SITE_URL, '']
 repo_url: "https://github.com/xsc27/chained-hashing"
 remote_branch: "gh-pages"
+use_directory_urls: false
+
 theme:
   name: "material"
   palette:
     scheme: slate
-use_directory_urls: false
+  include_search_page: true
+  features:
+  - navigation.indexes
+  - navigation.instant
+  - navigation.tabs
+  - navigation.top
+  - toc.integrate
+
+extra:
+  generator: false
+  # version:
+
 markdown_extensions:
+- attr_list
+- admonition
+- footnotes
+- meta
+- md_in_html
+- mdx_truly_sane_lists
+- tables
+- wikilinks
+- pymdownx.betterem
 - pymdownx.highlight
 - pymdownx.inlinehilite
 - pymdownx.magiclink
@@ -19,14 +41,18 @@ markdown_extensions:
     permalink: true
 
 plugins:
+- search
 - exclude:
     glob:
     - "_scripts/**"
-- search
+- mkdocs-jupyter:
+      theme: dark
+      ignore_h1_titles: True
+- literate-nav:
 - section-index
-- gen-files:
-    scripts:
-    - docs/_scripts/gen_stubs.py
+- redirects:
+    redirect_maps:
+      index.md: readme.md
 - mkdocstrings:
     handlers:
       python:
@@ -35,3 +61,18 @@ plugins:
           show_signature_annotations: true
     watch:
     - src
+- minify:
+    minify_html: true
+    minify_js: true
+    minify_css: true
+    htmlmin_opts:
+      remove_empty_space: true
+      remove_comments: true
+
+nav:
+  - Home:
+    - Readme: readme.md
+    - Changelog: changelog.md
+    - License: license.md
+  # - Demo: demo.ipynb
+  - Code Reference: reference/

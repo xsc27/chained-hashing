@@ -4,9 +4,9 @@
 #
 #    pip-compile --allow-unsafe --extra=lint --generate-hashes --output-file=requirements/lint.txt pyproject.toml
 #
-astroid==2.8.6 \
-    --hash=sha256:5f6f75e45f15290e73b56f9dfde95b4bf96382284cde406ef4203e928335a495 \
-    --hash=sha256:cd8326b424c971e7d87678609cf6275d22028afd37d6ac59c16d47f1245882f6
+astroid==2.9.0 \
+    --hash=sha256:5939cf55de24b92bda00345d4d0659d01b3c7dafb5055165c330bc7c568ba273 \
+    --hash=sha256:776ca0b748b4ad69c00bfe0fff38fa2d21c338e12c84aa9715ee0d473c422778
     # via pylint
 attrs==21.2.0 \
     --hash=sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1 \
@@ -31,9 +31,9 @@ colorama==0.4.4 \
     --hash=sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b \
     --hash=sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2
     # via flakehell
-distlib==0.3.3 \
-    --hash=sha256:c8b54e8454e5bf6237cc84c20e8264c3e991e824ef27e8f1e81049867d861e31 \
-    --hash=sha256:d982d0751ff6eaaab5e2ec8e691d949ee80eddf01a62eaa96ddb11531fe16b05
+distlib==0.3.4 \
+    --hash=sha256:6564fe0a8f51e734df6333d08b8b94d4ea8ee6b99b5ed50613f731fd4089f34b \
+    --hash=sha256:e4b58818180336dc9c529bfb9a0b58728ffc09ad92027a3f30b7cd91e3458579
     # via virtualenv
 dlint==0.12.0 \
     --hash=sha256:344823d299439aa94fe276b2b3b90733026787d25713c664e137cf5f7d0645f7
@@ -73,9 +73,9 @@ flake8==3.9.2 \
 flake8-bandit==2.1.2 \
     --hash=sha256:687fc8da2e4a239b206af2e54a90093572a60d0954f3054e23690739b0b0de3b
     # via chained-hashing (pyproject.toml)
-flake8-bugbear==21.9.2 \
-    --hash=sha256:4f7eaa6f05b7d7ea4cbbde93f7bcdc5438e79320fa1ec420d860c181af38b769 \
-    --hash=sha256:db9a09893a6c649a197f5350755100bb1dd84f110e60cf532fdfa07e41808ab2
+flake8-bugbear==21.11.29 \
+    --hash=sha256:179e41ddae5de5e3c20d1f61736feeb234e70958fbb56ab3c28a67739c8e9a82 \
+    --hash=sha256:8b04cb2fafc6a78e1a9d873bd3988e4282f7959bb6b0d7c1ae648ec09b937a7b
     # via chained-hashing (pyproject.toml)
 flake8-comprehensions==3.7.0 \
     --hash=sha256:6b3218b2dde8ac5959c6476cde8f41a79e823c22feb656be2710cd2a3232cef9 \
@@ -111,9 +111,9 @@ flake8-pytest-style==1.5.1 \
     --hash=sha256:56af62da468a547560a9f455c7f205449ed03e8f8a42f85373180e91c1031c40 \
     --hash=sha256:ae62f8db8ad0ea7d90695deb6dbbacfc67d45cb83a7c360388b34a9705786114
     # via chained-hashing (pyproject.toml)
-flake8-rst-docstrings==0.2.3 \
-    --hash=sha256:3045794e1c8467fba33aaea5c246b8369efc9c44ef8b0b20199bb6df7a4bd47b \
-    --hash=sha256:565bbb391d7e4d0042924102221e9857ad72929cdd305b26501736ec22c1451a
+flake8-rst-docstrings==0.2.5 \
+    --hash=sha256:4fe93f997dea45d9d3c8bd220f12f0b6c359948fb943b5b48021a3f927edd816 \
+    --hash=sha256:b99d9041b769b857efe45a448dc8c71b1bb311f9cacbdac5de82f96498105082
     # via chained-hashing (pyproject.toml)
 flakehell==0.9.0 \
     --hash=sha256:208836d8d24194d50cfa4c1fc99f681f3c537cc232edcd06455abc2971460893 \
@@ -197,9 +197,9 @@ pluggy==1.0.0 \
     --hash=sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159 \
     --hash=sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3
     # via pytest
-pre-commit==2.15.0 \
-    --hash=sha256:3c25add78dbdfb6a28a651780d5c311ac40dd17f160eb3954a0c59da40a505a7 \
-    --hash=sha256:a4ed01000afcb484d9eb8d504272e642c4c4099bbad3a6b27e519bd6a3e928a6
+pre-commit==2.16.0 \
+    --hash=sha256:758d1dc9b62c2ed8881585c254976d66eae0889919ab9b859064fc2fe3c7743e \
+    --hash=sha256:fe9897cac830aa7164dbd02a4e7b90cae49630451ce88464bca73db486ba9f65
     # via chained-hashing (pyproject.toml)
 py==1.11.0 \
     --hash=sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719 \
@@ -228,9 +228,9 @@ pygments==2.10.0 \
     # via
     #   flake8-rst-docstrings
     #   flakehell
-pylint==2.11.1 \
-    --hash=sha256:0f358e221c45cbd4dad2a1e4b883e75d28acdcccd29d40c76eb72b307269b126 \
-    --hash=sha256:2c9843fff1a88ca0ad98a256806c82c5a8f86086e7ccbdb93297d86c3f90c436
+pylint==2.12.2 \
+    --hash=sha256:9d945a73640e1fec07ee34b42f5669b770c759acd536ec7b16d7e4b87a9c9ff9 \
+    --hash=sha256:daabda3f7ed9d1c60f52d563b1b854632fd90035bcf01443e234d3dc794e3b74
     # via chained-hashing (pyproject.toml)
 pyparsing==3.0.6 \
     --hash=sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4 \
@@ -374,7 +374,7 @@ wrapt==1.13.3 \
     # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==59.2.0 \
-    --hash=sha256:157d21de9d055ab9e8ea3186d91e7f4f865e11f42deafa952d90842671fc2576 \
-    --hash=sha256:4adde3d1e1c89bde1c643c64d89cdd94cbfd8c75252ee459d4500bccb9c7d05d
+setuptools==59.6.0 \
+    --hash=sha256:22c7348c6d2976a52632c67f7ab0cdf40147db7789f9aed18734643fe9cf3373 \
+    --hash=sha256:4ce92f1e1f8f01233ee9952c04f6b81d1e02939d6e1b488428154974a4d0783e
     # via astroid
