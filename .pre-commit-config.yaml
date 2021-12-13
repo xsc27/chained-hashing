@@ -7,6 +7,8 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
       - id: check-toml
+      - id: check-yaml
+        args: ['--unsafe']
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
       - id: mixed-line-ending
