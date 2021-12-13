@@ -25,6 +25,11 @@ jobs:
         with:
           cache: 'pip'
           cache-dependency-path: 'requirements/*.txt'
+      - uses: actions/cache@v2
+        if: ${{ matrix.env == 'lint' }}
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ hashFiles('.pre-commit-config.yaml') }}
       - run: pip install --user tox
       - run: tox -e "${{ matrix.env }}"
       - uses: actions/upload-artifact@v2
