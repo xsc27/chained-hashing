@@ -131,6 +131,9 @@ jobs:
         with:
           ref: ${{ needs.changelog.outputs.tag }}
       - uses: actions/setup-python@v2
+        with:
+          cache: 'pip'
+          cache-dependency-path: 'requirements/*.txt'
       - run: python3 -m pip install --user tox
       - run: tox -e "${GITHUB_JOB}" -- gh-deploy --force
         # env:
