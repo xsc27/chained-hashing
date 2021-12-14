@@ -74,5 +74,5 @@ nav:
     - Readme: readme.md
     - Changelog: changelog.md
     - License: license.md
-  # - Demo: demo.ipynb
+  - Demo: demo.ipynb
   - Code Reference: reference/
