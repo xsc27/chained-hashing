@@ -59,7 +59,7 @@ def get_argparser(prog: str | None = None) -> argparse.ArgumentParser:
     return parser
 
 
-def run(args: list[Any] | None = None, prog: str | None = None) -> str:
+def run(args: list[Any] | None = None, prog: str | None = None) -> None:
     """Run main CLI workflow."""
     parsed_args = get_argparser(prog).parse_args(args)
     logging.basicConfig(level=getattr(logging, parsed_args.log_level.upper()))
