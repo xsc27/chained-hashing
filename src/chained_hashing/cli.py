@@ -48,13 +48,13 @@ def get_argparser(prog: str | None = None) -> argparse.ArgumentParser:
     decode = subparsers.add_parser("decode", help="decode data")
     decode.add_argument("-i", "--input", dest="src", required=True, help="input file")
     decode.add_argument("-o", "--output", dest="dest", default="", help="output file")
-    decode.add_argument("-b", "--block_size", default=BLOCK_SIZE, help="block size")
+    decode.add_argument("-b", "--block_size", default=BLOCK_SIZE, help="block size", type=int)
     decode.add_argument("sha", nargs="?", metavar="hash", help="h0 hash")
 
     encode = subparsers.add_parser("encode", help="encode data")
     encode.add_argument("-i", "--input", dest="src", required=True, help="input file")
     encode.add_argument("-o", "--output", dest="dest", required=True, help="output file")
-    encode.add_argument("-b", "--block_size", default=BLOCK_SIZE, help="block size")
+    encode.add_argument("-b", "--block_size", default=BLOCK_SIZE, help="block size", type=int)
 
     return parser
 
