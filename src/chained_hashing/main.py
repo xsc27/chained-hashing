@@ -14,7 +14,6 @@ from typing import IO
 from chained_hashing.constants import BLOCK_SIZE, SHA_SIZE
 from chained_hashing.exceptions import ChainedHashingError
 
-logging.basicConfig(level=logging.DEBUG)
 _LOG = logging.getLogger(__name__)
 
 
