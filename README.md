@@ -21,8 +21,8 @@ python3 -m pip install git+https://github.com/xsc27/chained-hashing.git
 ### Command Line Interface
 
 ```text
-❯ chained_hashing --help
-usage: chained_hashing [-h] [-v] [-l {notset,debug,info,warning,error,critical}] {run} ...
+❯ chcli --help
+usage: chcli [-h] [-v] [-l {notset,debug,info,warning,error,critical}] {run} ...
 
 Encode and decode files with chained hashing.
 
@@ -42,7 +42,7 @@ actions:
 
 ```text
 ❯ docker container run ghcr.io/xsc27/chained_hashing:latest
-usage: chained_hashing [-h] [-v]
+usage: chcli [-h] [-v]
                        [-l {notset,debug,info,warning,error,critical}]
                        {run} ...
 
